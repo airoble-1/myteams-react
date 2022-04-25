@@ -1,6 +1,15 @@
 import React, { useState } from "react"
 import { validateEmail } from "../../utilities/RegexValidation"
 import Input from "../Input/Input"
+import {
+  FormWrapper,
+  FormContainer,
+  FormImage,
+  FormBox,
+  FormTitle,
+  FormError,
+} from "../../styles/components/form"
+import Button from "../Button/Button"
 
 export default function LoginForm() {
   // one state instead of three slices of state
@@ -77,36 +86,45 @@ export default function LoginForm() {
     }
   }
   return (
-    <div>
-      <h1>LoginForm</h1>
-      {}
-      <form onSubmit={handleSubmit}>
-        <Input
-          label="Email"
-          name="identifier"
-          type="email"
-          placeholder="Enter email"
-          value={formData.identifier}
-          onBlur={(e) => validateIdentifier(e.target.value)}
-          onChange={handleOnChange}
-          error={formErrors.identifier && "Please enter a valid email"}
-          required
-        />
-        <Input
-          label="Password"
-          name="password"
-          type="password"
-          placeholder="Enter password"
-          value={formData.password}
-          onBlur={(e) => validatePassword(e.target.value)}
-          onChange={handleOnChange}
-          error={
-            formErrors.password && "Password must be at least 8 characters"
-          }
-          required
-        />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <FormWrapper>
+      <FormBox>
+        <FormContainer>
+          <form onSubmit={handleSubmit}>
+            <FormBox>
+              <FormImage
+                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                alt="logo"
+              />
+            </FormBox>
+            <FormTitle>Sign in</FormTitle>
+            <Input
+              label="Email"
+              name="identifier"
+              type="email"
+              placeholder="Enter email"
+              value={formData.identifier}
+              onBlur={(e) => validateIdentifier(e.target.value)}
+              onChange={handleOnChange}
+              error={formErrors.identifier && "Please enter a valid email"}
+              required
+            />
+            <Input
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              value={formData.password}
+              onBlur={(e) => validatePassword(e.target.value)}
+              onChange={handleOnChange}
+              error={
+                formErrors.password && "Password must be at least 8 characters"
+              }
+              required
+            />
+            <Button className="mt-2 mb-2">Sign in</Button>
+          </form>
+        </FormContainer>
+      </FormBox>
+    </FormWrapper>
   )
 }

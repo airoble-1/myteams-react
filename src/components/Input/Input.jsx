@@ -6,7 +6,6 @@ import {
   InputIconError,
 } from "./../../styles/components/input"
 export default function Input({
-  id,
   name,
   error,
   type,
@@ -22,7 +21,6 @@ export default function Input({
         {label && <InputLabel htmlFor={name}>{label}</InputLabel>}
         <div className="mt-1 relative rounded-md shadow-sm">
           <InputBase
-            id={id}
             name={name}
             type={type}
             placeholder={error ? error : placeholder}
