@@ -96,7 +96,7 @@ export default function LoginForm() {
                 alt="logo"
               />
             </FormBox>
-            <FormTitle>Sign in</FormTitle>
+            <FormTitle>Login in</FormTitle>
             <Input
               label="Email"
               name="identifier"
