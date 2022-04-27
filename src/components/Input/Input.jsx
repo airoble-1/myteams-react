@@ -4,6 +4,7 @@ import {
   InputBase,
   InputLabel,
   InputIconError,
+  InputMessageError,
 } from "./../../styles/components/input"
 export default function Input({
   name,
@@ -14,16 +15,15 @@ export default function Input({
   showError,
   ...rest
 }) {
-  console.log(error)
   return (
     <InputWrapper>
       <div>
         {label && <InputLabel htmlFor={name}>{label}</InputLabel>}
-        <div className="mt-1 relative rounded-md shadow-sm">
+        <div className="mt-1 relative rounded-md">
           <InputBase
             name={name}
             type={type}
-            placeholder={error ? error : placeholder}
+            placeholder={placeholder}
             error={error}
             {...rest}
           />
@@ -31,6 +31,9 @@ export default function Input({
             <InputIconError>
               <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
             </InputIconError>
+          )}
+          {error && (
+            <InputMessageError>{error ? error : placeholder}</InputMessageError>
           )}
         </div>
       </div>

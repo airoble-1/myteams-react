@@ -1,6 +1,8 @@
 import tw, { styled } from "twin.macro"
 
-export const InputWrapper = styled.div``
+export const InputWrapper = tw.div`
+mb-4
+`
 
 export const InputLabel = tw.label`
   block text-sm font-medium text-gray-700
@@ -15,7 +17,7 @@ export const InputBase = styled.input(({ error }) => [
   py-2 
   border 
   rounded-md 
-  shadow-sm 
+  shadow-none
   sm:text-sm`,
 
   tw`
@@ -37,7 +39,7 @@ export const InputBase = styled.input(({ error }) => [
 
 export const InputIconError = tw.div`
   absolute 
-  inset-y-0 
+  top-2.5
   right-0 
   pr-3 
   flex 
@@ -46,5 +48,5 @@ export const InputIconError = tw.div`
 `
 
 export const InputMessageError = tw.p`
-  mt-2 text-sm text-red-600
-`
+  mt-1 text-sm text-red-600 
+ `

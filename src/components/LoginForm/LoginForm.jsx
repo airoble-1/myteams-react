@@ -1,15 +1,15 @@
 import React, { useState } from "react"
 import { validateEmail } from "../../utilities/RegexValidation"
 import Input from "../Input/Input"
+import Button from "../Button/Button"
 import {
   FormWrapper,
   FormContainer,
   FormImage,
   FormBox,
   FormTitle,
-  FormError,
 } from "../../styles/components/form"
-import Button from "../Button/Button"
+import TestUser from "../TestUser/TestUser"
 
 export default function LoginForm() {
   // one state instead of three slices of state
@@ -121,6 +121,7 @@ export default function LoginForm() {
               }
               required
             />
+            <TestUser />
             <Button className="mt-2 mb-2">Sign in</Button>
           </form>
         </FormContainer>
