@@ -1,7 +1,8 @@
 import React, { useState } from "react"
-import { validateEmail } from "../../utilities/RegexValidation"
+import { validateEmail } from "../../utils/RegexValidation"
 import Input from "../Input/Input"
 import Button from "../Button/Button"
+import ButtonLink from "../../styles/components/buttonLink"
 import {
   FormWrapper,
   FormContainer,
@@ -74,7 +75,7 @@ export default function LoginForm() {
     const hasErrors = validateForm()
     if (!hasErrors) {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/auth/local`,
+        `${process.env.REACT_APP_API_URL}/api/user/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -122,7 +123,15 @@ export default function LoginForm() {
               required
             />
             <TestUser />
-            <Button className="mt-2 mb-2">Sign in</Button>
+            <Button type="submit" className="mt-2 mb-2">
+              Sign in
+            </Button>
+            <div className="flex justify-between mt-5">
+              <p>Don't have an account?</p>
+              <ButtonLink onClick={() => alert("Link clicked")}>
+                Sign Up
+              </ButtonLink>
+            </div>
           </form>
         </FormContainer>
       </FormBox>

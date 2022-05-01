@@ -1,4 +1,6 @@
-import React, { useState } from "react"
+import React, { useState, useContext, useEffect } from "react"
+import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/solid"
+import useFetchMutation from "../../hooks/useFetchMutation"
 import Input from "../Input/Input"
 import Button from "../Button/Button"
 import {
@@ -7,8 +9,12 @@ import {
   FormImage,
   FormBox,
   FormTitle,
+  FormError,
+  FormSucess,
 } from "../../styles/components/form"
-import { validateEmail } from "../../utilities/RegexValidation"
+import { validateEmail } from "../../utils/RegexValidation"
+import ButtonLink from "../../styles/components/buttonLink"
+
 export default function SignupForm() {
   let initialFormState = {
     identifier: "",
@@ -26,6 +32,9 @@ export default function SignupForm() {
   }
   const [formData, setFormData] = useState(initialFormState)
   const [formErrors, setFormErrors] = useState(initialFormErrors)
+  const [userSignupMutation, { data, loading, error }] = useFetchMutation(
+    `${process.env.REACT_APP_API_URL}/api/user/register`
+  )
   const handleOnChange = (e) => {
     // grab previous state no gurantee state rendered is the most updated since react schedules state updates
     // setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -96,18 +105,21 @@ export default function SignupForm() {
   }
   async function handleSubmit(e) {
     e.preventDefault()
-    const hasErrors = validateForm()
-    if (!hasErrors) {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/auth/local`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      )
-      const authData = await response.json()
-      console.log(authData)
+    const isValid = validateForm()
+    if (isValid) {
+      const dataObj = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.identifier,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      }
+
+      userSignupMutation({
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataObj),
+      })
     }
   }
   return (
@@ -115,71 +127,98 @@ export default function SignupForm() {
       <FormBox>
         <FormContainer>
           <form onSubmit={handleSubmit}>
-            <FormBox>
-              <FormImage
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                alt="logo"
+            <fieldset aria-busy={loading}>
+              <FormBox>
+                {error && (
+                  <FormError>
+                    <div className="flex items-center">
+                      <XCircleIcon className="h-5 w-5 mr-2" />
+                      {error.message}
+                    </div>
+                  </FormError>
+                )}
+                {data && (
+                  <FormSucess>
+                    <div className="flex items-center">
+                      <CheckCircleIcon className="h-5 w-5 mr-2" />
+                      {data.message}
+                    </div>
+                  </FormSucess>
+                )}
+                <FormImage
+                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                  alt="logo"
+                />
+              </FormBox>
+              <FormTitle>Sign up</FormTitle>
+              <Input
+                label="First Name"
+                name="firstName"
+                type="text"
+                placeholder="Enter your first name"
+                value={formData.firstName}
+                onBlur={(e) => validateName("firstName", e.target.value)}
+                onChange={handleOnChange}
+                error={formErrors.firstName && "Please enter first name"}
+                required
               />
-            </FormBox>
-            <FormTitle>Sign up</FormTitle>
-            <Input
-              label="First Name"
-              name="firstName"
-              type="text"
-              placeholder="Enter your first name"
-              value={formData.firstName}
-              onBlur={(e) => validateName("firstName", e.target.value)}
-              onChange={handleOnChange}
-              error={formErrors.firstName && "Please enter first name"}
-              required
-            />
-            <Input
-              label="Last Name"
-              name="lastName"
-              type="text"
-              placeholder="Enter your last name"
-              value={formData.lastName}
-              onBlur={(e) => validateName("lastName", e.target.value)}
-              onChange={handleOnChange}
-              error={formErrors.lastName && "Please enter last name"}
-              required
-            />
-            <Input
-              label="Email"
-              name="identifier"
-              type="email"
-              placeholder="Enter email"
-              value={formData.identifier}
-              onBlur={(e) => validateIdentifier(e.target.value)}
-              onChange={handleOnChange}
-              error={formErrors.identifier && "Please enter a valid email"}
-              required
-            />
-            <Input
-              label="Password"
-              name="password"
-              type="password"
-              placeholder="Enter password"
-              value={formData.password}
-              onBlur={(e) => validatePassword(e.target.value)}
-              onChange={handleOnChange}
-              error={
-                formErrors.password && "Password must be at least 8 characters"
-              }
-              required
-            />
-            <Input
-              label="Confirm Password"
-              name="confirmPassword"
-              type="password"
-              placeholder="Enter password again"
-              value={formData.confirmPassword}
-              onBlur={(e) => confirmPassword(e.target.value)}
-              onChange={handleOnChange}
-              error={formErrors.confirmPassword && "Passwords must match"}
-              required
-            />
-            <Button className="mt-2 mb-2">Sign up</Button>
+              <Input
+                label="Last Name"
+                name="lastName"
+                type="text"
+                placeholder="Enter your last name"
+                value={formData.lastName}
+                onBlur={(e) => validateName("lastName", e.target.value)}
+                onChange={handleOnChange}
+                error={formErrors.lastName && "Please enter last name"}
+                required
+              />
+              <Input
+                label="Email"
+                name="identifier"
+                type="email"
+                placeholder="Enter email"
+                value={formData.identifier}
+                onBlur={(e) => validateIdentifier(e.target.value)}
+                onChange={handleOnChange}
+                error={formErrors.identifier && "Please enter a valid email"}
+                required
+              />
+              <Input
+                label="Password"
+                name="password"
+                type="password"
+                placeholder="Enter password"
+                value={formData.password}
+                onBlur={(e) => validatePassword(e.target.value)}
+                onChange={handleOnChange}
+                error={
+                  formErrors.password &&
+                  "Password must be at least 8 characters"
+                }
+                required
+              />
+              <Input
+                label="Confirm Password"
+                name="confirmPassword"
+                type="password"
+                placeholder="Enter password again"
+                value={formData.confirmPassword}
+                onBlur={(e) => confirmPassword(e.target.value)}
+                onChange={handleOnChange}
+                error={formErrors.confirmPassword && "Passwords must match"}
+                required
+              />
+              <Button type="submit" className="mt-2 mb-2">
+                Sign up
+              </Button>
+              <div className="flex justify-between mt-5">
+                <p>Already have an account?</p>
+                <ButtonLink onClick={() => alert("Link clicked")}>
+                  Sign In
+                </ButtonLink>
+              </div>
+            </fieldset>
           </form>
         </FormContainer>
       </FormBox>
