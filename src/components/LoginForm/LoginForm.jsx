@@ -1,7 +1,11 @@
-import React, { useState } from "react"
+import React, { useState, useContext, useEffect } from "react"
+import { AuthContext } from "../../context/AuthContext"
 import { validateEmail } from "../../utils/RegexValidation"
+import useFetchMutation from "../../hooks/useFetchMutation"
+import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/solid"
 import Input from "../Input/Input"
 import Button from "../Button/Button"
+import TestUser from "../TestUser/TestUser"
 import ButtonLink from "../../styles/components/buttonLink"
 import {
   FormWrapper,
@@ -9,10 +13,13 @@ import {
   FormImage,
   FormBox,
   FormTitle,
+  FormError,
+  FormSucess,
 } from "../../styles/components/form"
-import TestUser from "../TestUser/TestUser"
 
 export default function LoginForm() {
+  let [authState, setAuthState] = useContext(AuthContext)
+
   // one state instead of three slices of state
   let initialFormState = {
     identifier: "",
@@ -24,6 +31,15 @@ export default function LoginForm() {
   }
   const [formData, setFormData] = useState(initialFormState)
   const [formErrors, setFormErrors] = useState(initialFormErrors)
+  const [userLoginMutation, { data, loading, error }] = useFetchMutation(
+    `${process.env.REACT_APP_API_URL}/api/user/login`
+  )
+  useEffect(() => {
+    if (data) {
+      setAuthState(data)
+    }
+  }, [data, setAuthState])
+
   const handleOnChange = (e) => {
     // grab previous state no gurantee state rendered is the most updated since react schedules state updates
     // setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -72,18 +88,17 @@ export default function LoginForm() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    const hasErrors = validateForm()
-    if (!hasErrors) {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/user/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      )
-      const authData = await response.json()
-      console.log(authData)
+    const isFormValid = validateForm()
+    if (isFormValid) {
+      const dataObj = {
+        email: formData.identifier,
+        password: formData.password,
+      }
+      userLoginMutation({
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataObj),
+      })
     }
   }
   return (
@@ -92,12 +107,29 @@ export default function LoginForm() {
         <FormContainer>
           <form onSubmit={handleSubmit}>
             <FormBox>
+              {error && (
+                <FormError>
+                  <div className="flex items-center">
+                    <XCircleIcon className="h-5 w-5 mr-2" />
+                    {error.message}
+                  </div>
+                </FormError>
+              )}
+              {data && (
+                <FormSucess>
+                  <div className="flex items-center">
+                    <CheckCircleIcon className="h-5 w-5 mr-2" />
+                    {data.token}
+                  </div>
+                </FormSucess>
+              )}
+              {data && <CheckCircleIcon className="h-7 w-7 text-green-500" />}
               <FormImage
                 src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
                 alt="logo"
               />
             </FormBox>
-            <FormTitle>Login in</FormTitle>
+            <FormTitle>Log in</FormTitle>
             <Input
               label="Email"
               name="identifier"

@@ -121,6 +121,11 @@ export default function SignupForm() {
         body: JSON.stringify(dataObj),
       })
     }
+    formData.identifier = ""
+    formData.password = ""
+    formData.confirmPassword = ""
+    formData.firstName = ""
+    formData.lastName = ""
   }
   return (
     <FormWrapper>
