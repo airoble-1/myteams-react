@@ -14,11 +14,10 @@ import {
   FormBox,
   FormTitle,
   FormError,
-  FormSucess,
 } from "../../styles/components/form"
 
 export default function LoginForm() {
-  let [authState, setAuthState] = useContext(AuthContext)
+  const [ , setAuthState] = useContext(AuthContext)
 
   // one state instead of three slices of state
   let initialFormState = {
@@ -115,14 +114,6 @@ export default function LoginForm() {
                   </div>
                 </FormError>
               )}
-              {data && (
-                <FormSucess>
-                  <div className="flex items-center">
-                    <CheckCircleIcon className="h-5 w-5 mr-2" />
-                    {data.token}
-                  </div>
-                </FormSucess>
-              )}
               {data && <CheckCircleIcon className="h-7 w-7 text-green-500" />}
               <FormImage
                 src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
@@ -160,8 +151,8 @@ export default function LoginForm() {
             </Button>
             <div className="flex justify-between mt-5">
               <p>Don't have an account?</p>
-              <ButtonLink onClick={() => alert("Link clicked")}>
-                Sign Up
+              <ButtonLink disabled={loading} onClick={() => alert("Link clicked")}>
+                {loading ? "Loading..." : "Sign Up"}
               </ButtonLink>
             </div>
           </form>
