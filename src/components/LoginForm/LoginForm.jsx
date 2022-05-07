@@ -6,7 +6,7 @@ import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/solid"
 import Input from "../Input/Input"
 import Button from "../Button/Button"
 import TestUser from "../TestUser/TestUser"
-import ButtonLink from "../../styles/components/buttonLink"
+import ButtonLink from "./../ButtonLink/ButtonLink"
 import {
   FormWrapper,
   FormContainer,
@@ -87,6 +87,7 @@ export default function LoginForm() {
 
   async function handleSubmit(e) {
     e.preventDefault()
+    console.log("form submited")
     const isFormValid = validateForm()
     if (isFormValid) {
       const dataObj = {
@@ -146,13 +147,13 @@ export default function LoginForm() {
               required
             />
             <TestUser />
-            <Button type="submit" className="mt-2 mb-2">
-              Sign in
+            <Button disabled={loading} type="submit" className="mt-2 mb-2">
+            {loading ? "Loading..." : "Sign In"}
             </Button>
             <div className="flex justify-between mt-5">
               <p>Don't have an account?</p>
-              <ButtonLink disabled={loading} onClick={() => alert("Link clicked")}>
-                {loading ? "Loading..." : "Sign Up"}
+              <ButtonLink  onClick={() => alert("Link clicked")}>
+                Sign Up
               </ButtonLink>
             </div>
           </form>

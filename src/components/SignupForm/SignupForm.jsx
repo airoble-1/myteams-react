@@ -13,7 +13,7 @@ import {
   FormSucess,
 } from "../../styles/components/form"
 import { validateEmail } from "../../utils/RegexValidation"
-import ButtonLink from "../../styles/components/buttonLink"
+import ButtonLink from "./../ButtonLink/ButtonLink"
 
 export default function SignupForm() {
   let initialFormState = {
@@ -105,6 +105,7 @@ export default function SignupForm() {
   }
   async function handleSubmit(e) {
     e.preventDefault()
+    console.log("form submited")
     const isValid = validateForm()
     if (isValid) {
       const dataObj = {
@@ -214,14 +215,14 @@ export default function SignupForm() {
                 error={formErrors.confirmPassword && "Passwords must match"}
                 required
               />
-              <Button type="submit" className="mt-2 mb-2">
-                Sign up
-              </Button>
+             <Button disabled={loading} type="submit" className="mt-2 mb-2">
+            {loading ? "Loading..." : "Sign Up"}
+            </Button>
               <div className="flex justify-between mt-5">
                 <p>Already have an account?</p>
-                <ButtonLink onClick={() => alert("Link clicked")}>
-                  Sign In
-                </ButtonLink>
+                <ButtonLink  onClick={() => alert("Link clicked")}>
+                Sign In
+              </ButtonLink>
               </div>
             </fieldset>
           </form>
