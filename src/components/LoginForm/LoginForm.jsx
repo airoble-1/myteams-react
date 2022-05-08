@@ -1,12 +1,12 @@
-import React, { useState, useContext, useEffect } from "react"
-import { AuthContext } from "../../context/AuthContext"
-import { validateEmail } from "../../utils/RegexValidation"
-import useFetchMutation from "../../hooks/useFetchMutation"
-import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/solid"
-import Input from "../Input/Input"
-import Button from "../Button/Button"
-import TestUser from "../TestUser/TestUser"
-import ButtonLink from "./../ButtonLink/ButtonLink"
+import React, { useState, useContext, useEffect } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { validateEmail } from "../../utils/RegexValidation";
+import useFetchMutation from "../../hooks/useFetchMutation";
+import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/solid";
+import Input from "../Input/Input";
+import Button from "../Button/Button";
+import TestUser from "../TestUser/TestUser";
+import ButtonLink from "./../ButtonLink/ButtonLink";
 import {
   FormWrapper,
   FormContainer,
@@ -14,53 +14,53 @@ import {
   FormBox,
   FormTitle,
   FormError,
-} from "../../styles/components/form"
+} from "../../styles/components/form";
 
-export default function LoginForm() {
-  const [ , setAuthState] = useContext(AuthContext)
+export default function LoginForm({ setIsLoginForm }) {
+  const [, setAuthState] = useContext(AuthContext);
 
   // one state instead of three slices of state
   let initialFormState = {
     identifier: "",
     password: "",
-  }
+  };
   let initialFormErrors = {
     identifier: false,
     password: false,
-  }
-  const [formData, setFormData] = useState(initialFormState)
-  const [formErrors, setFormErrors] = useState(initialFormErrors)
+  };
+  const [formData, setFormData] = useState(initialFormState);
+  const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [userLoginMutation, { data, loading, error }] = useFetchMutation(
     `${process.env.REACT_APP_API_URL}/api/user/login`
-  )
+  );
   useEffect(() => {
     if (data) {
-      setAuthState(data)
+      setAuthState(data);
     }
-  }, [data, setAuthState])
+  }, [data, setAuthState]);
 
   const handleOnChange = (e) => {
     // grab previous state no gurantee state rendered is the most updated since react schedules state updates
     // setFormData({ ...formData, [e.target.name]: e.target.value })
     // call back function has access to latest state in updater
-    const { name, value } = e.target
+    const { name, value } = e.target;
     // setState function work asyncronously
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
-    }))
-  }
+    }));
+  };
   function validateIdentifier(identifier) {
     if (validateEmail(identifier)) {
       setFormErrors((prevState) => ({
         ...prevState,
         identifier: false,
-      }))
+      }));
     } else {
       setFormErrors((prevState) => ({
         ...prevState,
         identifier: true,
-      }))
+      }));
     }
   }
 
@@ -69,36 +69,36 @@ export default function LoginForm() {
       setFormErrors((prevState) => ({
         ...prevState,
         password: false,
-      }))
+      }));
     } else {
       setFormErrors((prevState) => ({
         ...prevState,
         password: true,
-      }))
+      }));
     }
   }
   function validateForm() {
     if (formErrors.identifier || formErrors.password) {
-      return false
+      return false;
     } else {
-      return true
+      return true;
     }
   }
 
   async function handleSubmit(e) {
-    e.preventDefault()
-    console.log("form submited")
-    const isFormValid = validateForm()
+    e.preventDefault();
+    console.log("form submited");
+    const isFormValid = validateForm();
     if (isFormValid) {
       const dataObj = {
         email: formData.identifier,
         password: formData.password,
-      }
+      };
       userLoginMutation({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataObj),
-      })
+      });
     }
   }
   return (
@@ -148,11 +148,11 @@ export default function LoginForm() {
             />
             <TestUser />
             <Button disabled={loading} type="submit" className="mt-2 mb-2">
-            {loading ? "Loading..." : "Sign In"}
+              {loading ? "Loading..." : "Sign In"}
             </Button>
-            <div className="flex justify-between mt-5">
+            <div className="flex flex-col items-center lg:flex-row md:justify-between mt-5">
               <p>Don't have an account?</p>
-              <ButtonLink  onClick={() => alert("Link clicked")}>
+              <ButtonLink onClick={() => setIsLoginForm(false)}>
                 Sign Up
               </ButtonLink>
             </div>
@@ -160,5 +160,5 @@ export default function LoginForm() {
         </FormContainer>
       </FormBox>
     </FormWrapper>
-  )
+  );
 }
