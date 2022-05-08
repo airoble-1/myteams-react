@@ -1,4 +1,4 @@
-import tw from "twin.macro"
+import tw from "twin.macro";
 
 const ButtonLinkStyle = tw.button`
   bg-none
@@ -6,5 +6,5 @@ const ButtonLinkStyle = tw.button`
   text-base
   font-medium
   text-indigo-500
-`
-export default ButtonLinkStyle
+`;
+export default ButtonLinkStyle;

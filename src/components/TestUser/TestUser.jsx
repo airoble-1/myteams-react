@@ -1,6 +1,6 @@
-import React from "react"
+import React from "react";
 
-import Pill from "../../styles/components/pill"
+import Pill from "../../styles/components/pill";
 
 export default function TestUser() {
   return (
@@ -16,10 +16,10 @@ export default function TestUser() {
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-between">
+      <div className="flex flex-col md:flex-row flex-wrap justify-between">
         <Pill>E: testuser@test.com</Pill>
         <Pill>P: testuser</Pill>
       </div>
     </div>
-  )
+  );
 }
